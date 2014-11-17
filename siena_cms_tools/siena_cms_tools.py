@@ -7,6 +7,51 @@ import pickle
 
 ################################################################################
 ################################################################################
+def cms_tools_help():
+
+    print "Usage:\n"
+    print "\tcollisions = get_collisions(f)"
+    print "\nWhere f is a file (or zip file)"
+    print "\n"
+    print "\tjets,topjets,muons,electrons,met = collision"
+    print "\tmass,px,py,pz,csv = jet"
+    print "\t#### EXPLANATION? AT LEAST OF CSV######"
+    print "\tmass,px,py,pz,nsub,minmass = topjet"
+    print "\tmass,px,py,pz = muon"
+    print "\tmass,px,py,pz = electron"
+    print "\tpt,phi = met"
+    print "\n"
+
+################################################################################
+################################################################################
+def pretty_print(collision):
+
+    jets,topjets,muons,electrons,met = collision
+
+    print "------- jets"
+    for p in jets:
+        mass,px,py,pz,csv = p
+        print "mass: %8.5f px: %8.5f py: %12.5f pz: %12.5f csv: %12.5f" % (mass,px,py,pz,csv)
+    print "------- top jets"
+    for p in topjets:
+        mass,px,py,pz,nsub,minmass = p
+        print "%8.5f %8.5f %12.5f %12.5f %12.5f %12.5f" % (mass,px,py,pz,nsub,minmass)
+    print "------- muons"
+    for p in muons:
+        mass,px,py,pz = p
+        print "%8.5f %8.5f %12.5f %12.5f" % (mass,px,py,pz)
+    print "------- electrons"
+    for p in electrons:
+        mass,px,py,pz = p
+        print "%8.5f %8.5f %12.5f %12.5f" % (mass,px,py,pz)
+    print "------- met"
+    for p in met:
+        pt,phi = p
+        print "%8.5f %8.5f" % (pt,phi)
+
+
+################################################################################
+################################################################################
 def get_collisions(infile,verbose=False):
 
     collisions = []
