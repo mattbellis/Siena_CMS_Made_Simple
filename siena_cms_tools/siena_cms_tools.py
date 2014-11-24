@@ -22,6 +22,39 @@ def cms_tools_help():
     print "\tpt,phi = met"
     print "\n"
 
+
+################################################################################
+################################################################################
+def cms_tools_help_verbos():
+
+    print "Usage:\n"
+    print "\tcollisions = get_collisions(f)"
+    print "\nWhere f is a file (or zip file)"
+    print "\n"
+    print "\tjets,topjets,muons,electrons,met = collision"
+    print "\n"
+    print "jets-are the jets from the decay products of the top (quarks)"
+    print "topjets- jet from the top quark (ca8jets)"
+    print "muons & electrons- if a top decays leptonicly (the W decays to a lepton (muon or electron) and neutrino.  It can also decay to a tau, but the tau cannot be detected because it decays too quickly)"
+    print "met- the missing energy from the neutrinos that can not directly be measure by the detector"
+    print "\n"
+    print "\tmass,px,py,pz,csv = jet"
+    print "\tmass,px,py,pz,nsub,minmass = topjet"
+    print "\tmass,px,py,pz = muon"
+    print "\tmass,px,py,pz = electron"
+    print "\tpt,phi = met"
+    print "\n"
+    print "mass-mass of the particle/jet"
+    print "px-momentum in the x direction"
+    print "py-momentum in the y direction"
+    print "pz-momentum in the z direction"
+    print "csv-"
+    print "nsub-"
+    print "minmass-"
+    print "pt-momentum in the transverse plane.  Momentum that is orthongonal to the beam."
+    print "phi-called the azimuthal angle.  It is the angle between the pt and x-axis if the beams are on the z. "
+    print "\n"
+
 ################################################################################
 ################################################################################
 def pretty_print(collision):
@@ -31,23 +64,23 @@ def pretty_print(collision):
     print "------- jets"
     for p in jets:
         mass,px,py,pz,csv = p
-        print "mass: %8.5f px: %8.5f py: %12.5f pz: %12.5f csv: %12.5f" % (mass,px,py,pz,csv)
+        print "mass:%8.5f px:%12.5f py:%12.5f pz:%12.5f csv:%12.5f" % (mass,px,py,pz,csv)
     print "------- top jets"
     for p in topjets:
         mass,px,py,pz,nsub,minmass = p
-        print "%8.5f %8.5f %12.5f %12.5f %12.5f %12.5f" % (mass,px,py,pz,nsub,minmass)
+        print "mass:%8.5f px:%12.5f py:%12.5f pz:%12.5f nsub:%12.5f min mass:%12.5f" % (mass,px,py,pz,nsub,minmass)
     print "------- muons"
     for p in muons:
         mass,px,py,pz = p
-        print "%8.5f %8.5f %12.5f %12.5f" % (mass,px,py,pz)
+        print "mass:%8.5f px:%12.5f py:%12.5f pz:%12.5f" % (mass,px,py,pz)
     print "------- electrons"
     for p in electrons:
         mass,px,py,pz = p
-        print "%8.5f %8.5f %12.5f %12.5f" % (mass,px,py,pz)
+        print "mass:%8.5f px:%12.5f py:%12.5f pz:%12.5f" % (mass,px,py,pz)
     print "------- met"
     for p in met:
         pt,phi = p
-        print "%8.5f %8.5f" % (pt,phi)
+        print "pt:%8.5f phi:%8.5f" % (pt,phi)
 
 
 ################################################################################
