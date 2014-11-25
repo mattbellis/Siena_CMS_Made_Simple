@@ -9,6 +9,9 @@ import numpy as np
 ### 
 ### Yup! I think it works.
 ### Let's try this again....
+###
+### Third verse, same as the first....
+###
 ################################################################################
 def cms_tools_help(verbose=0):
 
