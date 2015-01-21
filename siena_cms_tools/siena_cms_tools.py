@@ -221,7 +221,7 @@ def get_collisions(infile,verbose=False):
             new_collision = False
             collision_count += 1
 
-            collisions.append([jets,topjets,muons,electrons,met])
+            collisions.append([jets,topjets,muons,electrons,photons,met])
 
     return collisions
 
