@@ -183,7 +183,7 @@ def get_collisions(infile,verbose=False):
                 electrons.append([e,px,py,pz])
 
             # Read in the photon info for this collision.
-            '''
+            #'''
             photons = []
             line = infile.readline()
             nphotons = int(line)
@@ -195,7 +195,7 @@ def get_collisions(infile,verbose=False):
                 py = float(vals[2])
                 pz = float(vals[3])
                 photons.append([e,px,py,pz])
-            '''
+            #'''
 
 
             # Read in the information about the missing transverse energy (MET) in the collision.
