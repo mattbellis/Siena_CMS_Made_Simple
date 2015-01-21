@@ -75,7 +75,7 @@ def cms_tools_help(verbose=0):
 ################################################################################
 def pretty_print(collision):
 
-    jets,topjets,muons,electrons,met = collision
+    jets,topjets,muons,electrons,photons,met = collision
 
     print "------- jets"
     for p in jets:
@@ -91,6 +91,10 @@ def pretty_print(collision):
         print "mass:%8.5f px:%12.5f py:%12.5f pz:%12.5f" % (mass,px,py,pz)
     print "------- electrons"
     for p in electrons:
+        mass,px,py,pz = p
+        print "mass:%8.5f px:%12.5f py:%12.5f pz:%12.5f" % (mass,px,py,pz)
+    print "------- photons"
+    for p in photons:
         mass,px,py,pz = p
         print "mass:%8.5f px:%12.5f py:%12.5f pz:%12.5f" % (mass,px,py,pz)
     print "------- met"
