@@ -5,7 +5,10 @@ import sys
 
 infile = open(sys.argv[1])
 
-collisions = cms.get_collisions(infile)
+#collisions = cms.get_collisions(infile)
+collisions = cms.get_collisions_from_file_name(sys.argv[1])
+
+print len(collisions)
 
 #fig = plt.figure(figsize=(7,5),dpi=100)
 #ax = fig.add_subplot(1,1,1)
@@ -14,5 +17,5 @@ collisions = cms.get_collisions(infile)
 
 lines,fig,ax = cms.display_collision3D(collisions[1])
 
-plt.show(block=False)
+#plt.show(block=False)
 
