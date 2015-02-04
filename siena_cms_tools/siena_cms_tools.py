@@ -3,6 +3,11 @@
 ################################################################################
 
 import numpy as np
+import matplotlib.pylab as plt
+import matplotlib.patches as mpatches
+import matplotlib.lines as mlines
+import mpl_toolkits.mplot3d.art3d as a3
+
 
 ################################################################################
 ### I REALLY, REALLY HOPE THIS WORKS!!!!!!!!!!!!!!!
@@ -171,9 +176,9 @@ def get_collisions(infile,verbose=False):
                 px = float(vals[1])
                 py = float(vals[2])
                 pz = float(vals[3])
-                #charge = int(vals[4])
-                #muons.append([e,px,py,pz,charge])
-                muons.append([e,px,py,pz])
+                charge = int(float(vals[4]))
+                muons.append([e,px,py,pz,charge])
+                #muons.append([e,px,py,pz])
                 num_mu+=1
                 
 
@@ -188,9 +193,9 @@ def get_collisions(infile,verbose=False):
                 px = float(vals[1])
                 py = float(vals[2])
                 pz = float(vals[3])
-                #charge = int(vals[4])
-                #electrons.append([e,px,py,pz,charge])
-                electrons.append([e,px,py,pz])
+                charge = int(float(vals[4]))
+                electrons.append([e,px,py,pz,charge])
+                #electrons.append([e,px,py,pz])
 
             # Read in the photon info for this collision.
             #'''
@@ -235,171 +240,185 @@ def get_collisions_from_zipped_file(infile,verbose=False):
     return get_collisions(infile)
 '''
 
-###############################################################################
 
-def get_array_collisions(infile):
-    collisions = np.load(infile)
-    infile.close()
-    return collisions
+################################################################################
+################################################################################
+def draw_jet(origin=(0,0),angle=90,length=0.5,opening_angle=20,ntracks=5,show_tracks=False):
 
+    lines = []
+    patches = []
 
-###############################################################################
+    # Edges of cone
+    width_at_top = length*np.deg2rad(opening_angle)
+    for side in [-1,1]:
+        theta0 = np.deg2rad(angle+(side*opening_angle/2.0)) 
+        x1 = length*np.cos(theta0)
+        y1 = length*np.sin(theta0)
+        #print x1,y1
+        line = mlines.Line2D((origin[0],x1), (origin[1],y1), lw=2., alpha=0.4,color='red',markeredgecolor='red')
+        lines.append(line)
 
-def get_compressed_collisions(infile):
-    b = np.load(infile)
-    collisions = b['arr_0']
-    infile.close()
-    return collisions
+    # End of cone
+    arad = np.deg2rad(angle)
+    center = (origin[0]+np.cos(arad)*length,origin[1]+np.sin(arad)*length)
+    #print center
+    p = mpatches.Ellipse(center, width_at_top+0.01, width_at_top/2.0,facecolor='red',alpha=0.4,edgecolor='gray',angle=abs(angle+90))
+    patches.append(p)
 
-
-###############################################################################
-
-def get_pickle_collisions(infile):
-    collisions = pickle.load(infile)
-    infile.close()
-    return collisions
-
-
-###############################################################################
-def get_onebyonesixty_collisions(infile):
-    toReturn = []
-    collisions = get_compressed_collisions(infile)
-    for collision in collisions:
-        toAdd = []
-        tempJets = collision[0:40]
-        tempMuons = collision[40:80]
-        tempElectrons = collision[80:120]
-        tempPhotons = collision[120:160]
-        met = collision[160:162].tolist()
-        #tempJets = tempJets[tempJets!=0]
-        #tempMuons = tempMuons[tempMuons!=0]
-        #tempElectrons = tempElectrons[tempElectrons!=0]
-        #tempPhotons = tempPhotons[tempPhotons!=0]
-        i = 0
-        jets = []
-        while i+5 <= len(tempJets) and tempJets[i] != 0:
-            jets.append(tempJets[i:i+5].tolist())
-            i += 5
-        muons = []
-        i = 0
-        while i+5 <=len(tempMuons) and tempMuons[i] != 0:
-            muons.append(tempMuons[i:i+5].tolist())
-            i += 5
-        electrons = []
-        i = 0
-        while i+5 <= len(tempElectrons) and tempElectrons[i] != 0:
-            electrons.append(tempElectrons[i:i+5].tolist())
-            i += 5
-        photons = []
-        i = 0
-        while i+5 <= len(tempPhotons) and tempPhotons[i] != 0:
-            photons.append(tempPhotons[i:i+4].tolist())
-            i += 5
-        #jets = np.array(jets)
-        #muons = np.array(muons)
-        #electrons = np.array(electrons)
-        #photons = np.array(photons)
-        #met = np.array(met)
-        toAdd.append(jets)
-        toAdd.append(muons)
-        toAdd.append(electrons)
-        toAdd.append(photons)
-        toAdd.append(met)
-        #toAdd = np.array(toAdd)
-        toReturn.append(toAdd)
-    #toReturn = np.array(toReturn)
-    return toReturn
-
-###############################################################################
-
-def get_fourbyforty_collisions(infile):
-    toReturn = []
-    collisions = get_compressed_collisions(infile)
-    for collision in collisions:
-        toAdd = []
-        tempJets = collision[0][0:40]
-        tempMuons = collision[1][0:40]
-        tempElectrons = collisions[2][0:40]
-        tempPhotons = collision[3][0:40]
-        met = collision[3][40:42]
-        i = 0
-        jets = []
-        while i+5 <= len(tempJets) and tempJets[i] != 0:
-            jets.append(tempJets[i:i+5].tolist())
-            i += 5
-        muons = []
-        i = 0
-        while i+5 <=len(tempMuons) and tempMuons[i] != 0:
-            muons.append(tempMuons[i:i+5].tolist())
-            i += 5
-        electrons = []
-        i = 0
-        while i+5 <= len(tempElectrons) and tempElectrons[i] != 0:
-            electrons.append(tempElectrons[i:i+5].tolist())
-            i += 5
-        photons = []
-        i = 0
-        while i+5 <= len(tempPhotons) and tempPhotons[i] != 0:
-            photons.append(tempPhotons[i:i+4].tolist())
-            i += 5
-        toAdd.append(jets)
-        toAdd.append(muons)
-        toAdd.append(electrons)
-        toAdd.append(photons)
-        toAdd.append(met)
-        #toAdd = np.array(toAdd)
-        toReturn.append(toAdd)
-    #toReturn = np.array(toReturn)
-    return toReturn
+    return patches,lines
 
 
+    
+
+################################################################################
+################################################################################
+def draw_jets(origins=[(0,0)],angles=[90],lengths=[0.5],opening_angles=[20],ntrackss=[5],show_trackss=[False]):
+
+    alllines = []
+    allpatches = []
+
+    # Edges of cone
+    for origin,angle,length,opening_angle,ntracks,show_tracks in zip(origins,angles,lengths,opening_angles,ntrackss,show_trackss):
+        patches,lines = draw_jet(origin=origin,angle=angle,length=length,opening_angle=opening_angle,ntracks=ntracks,show_tracks=show_tracks)
+        allpatches += patches
+        alllines += lines
 
 
-###############################################################################
-
-def get_thirtytwobyfive_collisions(infile):
-    toReturn = []
-    collisions = get_compressed_collisions(infile)
-    for collision in collisions:
-        toAdd = []
-        tempJets = collision[0:8].tolist()
-        tempMuons = collision[8:16].tolist()
-        tempElectrons = collision[16:24].tolist()
-        tempPhotons = collision[24:32].tolist()        
-        met = collision[32][0:1].tolist()
-        jets = []
-        muons = []
-        electrons = []
-        photons = []
-        for jet in tempJets:
-            if jet[0] != 0:
-                jets.append(jet)
-        for muon in tempMuons:
-            if muon[0] != 0:
-                muons.append(muon)
-        for electron in tempElectrons:
-            if electron[0] != 0:
-                electrons.append(electron)
-        for photon in tempPhotons:
-            if photon[0] != 0:
-                photons.append(photon[0:4])
-        
-        toAdd.append(jets)
-        toAdd.append(muons)
-        toAdd.append(electrons)
-        toAdd.append(photons)
-        toAdd.append(met)
-       # toAdd = np.array(toAdd)
-        toReturn.append(toAdd)
-    #toReturn = np.array(toReturn)
-    return toReturn
+    return allpatches,alllines
 
 
+    
+################################################################################
+################################################################################
+def draw_line3D(origin=[(0,0,0)],pmom=[(1,1,1)],color='red',ls='-',lw=2.0):
+
+    lines = []
+
+    #print pmom
+    for o,p in zip(origin,pmom):
+        #x1 = p[0]
+        #y1 = p[1]
+        #z1 = p[2]
+        x1 = p[2]
+        y1 = p[0]
+        z1 = p[1]
+        #print x1,y1,z1
+        line = a3.Line3D((o[0],x1),(o[1],y1),(o[0],z1), lw=lw, ls=ls, alpha=0.9,color=color,markeredgecolor=color)
+        lines.append(line)
+
+    return lines
 
 
+################################################################################
+################################################################################
+def draw_beams():
+
+    lines = draw_line3D(origin=[(0,0,-0.1),(0,0,0.1)],pmom=[(0,0,-200.0),(0,0,200.0)],color='red',lw=1)
+
+    return lines
+
+################################################################################
+################################################################################
+def draw_jet3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
+
+    neworg = origin.copy()
+    newmom = pmom.copy()
+
+    offset = [[0.05,0.05,0.05],
+              [0.05,0.05,-0.05],
+              [0.05,-0.05,0.05],
+              [0.05,-0.05,-0.05],
+              [-0.05,0.05,0.05],
+              [-0.05,0.05,-0.05],
+              [-0.05,-0.05,0.05],
+              [-0.05,-0.05,-0.05],
+            ]
+
+    offset = np.array(offset)
+    offset *= 50
+
+    for p in pmom:
+        for o in offset:
+            #print p.copy(),o
+            pnew = p.copy() + o
+            #print pnew
+            newmom = np.vstack((newmom,pnew))
+            neworg = np.vstack((neworg,(0,0,0)))
+
+    lines = draw_line3D(origin=neworg,pmom=newmom,color='orange',lw=1)
+
+    return lines
+
+################################################################################
+################################################################################
+def draw_muon3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
+
+    lines = draw_line3D(origin=origin,pmom=pmom,color='blue',lw=5)
+
+    return lines
+
+################################################################################
+################################################################################
+def draw_electron3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
+
+    lines = draw_line3D(origin=origin,pmom=pmom,color='green',lw=2)
+
+    return lines
 
 
+################################################################################
+################################################################################
+def draw_photon3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
 
+    lines = draw_line3D(origin=origin,pmom=pmom,color='gray',ls='--',lw=7)
 
+    return lines
 
+################################################################################
+################################################################################
+def display_collision3D(collision,fig=None,ax=None):
+
+    jets,topjets,muons,electrons,photons,met = collision
+
+    lines = draw_beams()
+
+    pmom = np.array(jets).transpose()[1:4].transpose()
+    origin = np.zeros((len(jets),3))
+    lines += draw_jet3D(origin=origin,pmom=pmom)
+
+    pmom = np.array(muons).transpose()[1:4].transpose()
+    origin = np.zeros((len(muons),3))
+    lines += draw_muon3D(origin=origin,pmom=pmom)
+
+    pmom = np.array(electrons).transpose()[1:4].transpose()
+    origin = np.zeros((len(electrons),3))
+    lines += draw_muon3D(origin=origin,pmom=pmom)
+
+    pmom = np.array(photons).transpose()[1:4].transpose()
+    origin = np.zeros((len(photons),3))
+    lines += draw_muon3D(origin=origin,pmom=pmom)
+
+    if ax is None and fig is not None:
+        ax = fig.add_subplot(1,1,1)
+        ax = fig.gca(projection='3d')
+        plt.subplots_adjust(top=0.98,bottom=0.02,right=0.98,left=0.02)
+    
+    if ax is not None:
+        ax.cla() # Clear the axes
+
+    if fig is None:
+        fig = plt.figure(figsize=(7,5),dpi=100)
+        if ax is None:
+            ax = fig.add_subplot(1,1,1)
+            ax = fig.gca(projection='3d')
+            plt.subplots_adjust(top=0.98,bottom=0.02,right=0.98,left=0.02)
+
+    for l in lines:
+        ax.add_line(l)
+
+    ax.set_xlim(-200,200)
+    ax.set_ylim(-200,200)
+    ax.set_zlim(-200,200)
+
+    return lines,fig,ax
 
