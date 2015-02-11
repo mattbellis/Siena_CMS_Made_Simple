@@ -10,6 +10,8 @@ import mpl_toolkits.mplot3d.art3d as a3
 
 import zipfile
 
+import os
+
 ################################################################################
 ### I REALLY, REALLY HOPE THIS WORKS!!!!!!!!!!!!!!!
 ### 
@@ -442,6 +444,89 @@ def display_collision3D(collision,fig=None,ax=None):
 ################################################################################
 # Write function
 ################################################################################
-def write_to_file(collisions,filename='default_collisions_output',zipfile=True):
+def write_to_file(collisions,filename='default_collisions_output',do_zip=True):
+
+    outfilename = "%s.dat" % (filename)
+    outfile = open(outfilename,'w')
+
+    #print "\tenergy,px,py,pz,csv = jet"
+    #print "\tenergy,px,py,pz,nsub,minmass = topjet"
+    #print "\tenergy,px,py,pz = muon"
+    #print "\tenergy,px,py,pz = electron"
+    #print "\tpt,phi = met"
+
+    i = 0
+    for collision in collisions:
+
+        print collision
+        jets,topjets,muons,electrons,photons,met = collision
+        
+        if i%1000==0:
+            print "Event: %d" % (i)
+
+        output = "Event: %d\n" % (i)
+
+        ############################################################################
+        # Print out the not-top jets
+        ############################################################################
+        output += "%d\n" % (len(jets))
+        for jet in jets:
+            energy,px,py,pz,btag = jet
+            output += "%-10.4f %-10.4f %-10.4f %-10.4f %-10.4f\n" % (energy,px,py,pz,btag)
+
+        ############################################################################
+        # Print out the top jets
+        ############################################################################
+        output += "%d\n" % (len(topjets))
+        for jet in topjets:
+            energy,px,py,pz,nsub,minmass = jet
+            output += "%-10.4f %-10.4f %-10.4f %-10.4f %-10.4f %-10.4f\n" % (energy,px,py,pz,nsub,minmass)
+
+        ############################################################################
+        # Print out the muons
+        ############################################################################
+        output += "%d\n" % (len(muons))
+        for muon in muons:
+            energy,px,py,pz,q = muon
+            output += "%-10.4f %-10.4f %-10.4f %-10.4f %-10.4f\n" % (energy,px,py,pz,q)
+
+        ############################################################################
+        # Print out the electrons
+        ############################################################################
+        output += "%d\n" % (len(electrons))
+        for electron in electrons:
+            energy,px,py,pz,q = electron
+            output += "%-10.4f %-10.4f %-10.4f %-10.4f %-10.4f\n" % (energy,px,py,pz,q)
+
+        ############################################################################
+        # Print out the photons
+        ############################################################################
+        output += "%d\n" % (len(photons))
+        for photon in photons:
+            energy,px,py,pz = photon
+            output += "%-10.4f %-10.4f %-10.4f %-10.4f\n" % (energy,px,py,pz)
+
+
+        ############################################################################
+        # Print out the met
+        ############################################################################
+        output += "%d\n" % (len(met))
+        for m in met:
+            pt,phi = m
+            output += "%-10.4f %-10.4f\n" % (pt,phi)
+
+        outfile.write(output)
+
+        i += 1
+
+    outfile.close()
+
+    if do_zip:
+        zipfilename = "%s.zip" % (filename)
+        zf = zipfile.ZipFile(zipfilename,'w')
+        zf.write(outfilename,compress_type=zipfile.ZIP_DEFLATED)
+        zf.close()
+
+        os.remove(outfilename)
 
     return 0
