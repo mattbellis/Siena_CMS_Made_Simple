@@ -439,3 +439,9 @@ def display_collision3D(collision,fig=None,ax=None):
 
     return lines,fig,ax
 
+################################################################################
+# Write function
+################################################################################
+def write_to_file(collisions,filename='default_collisions_output',zipfile=True):
+
+    return 0
