@@ -27,11 +27,11 @@ def cms_tools_help(verbose=0):
         print "\nWhere f is a file (or zip file)"
         print "\n"
         print "\tjets,topjets,muons,electrons,met = collision"
-        print "\tmass,px,py,pz,csv = jet"
+        print "\tenergy,px,py,pz,csv = jet"
         print "\t#### EXPLANATION? AT LEAST OF CSV######"
-        print "\tmass,px,py,pz,nsub,minmass = topjet"
-        print "\tmass,px,py,pz = muon"
-        print "\tmass,px,py,pz = electron"
+        print "\tenergy,px,py,pz,nsub,minmass = topjet"
+        print "\tenergy,px,py,pz = muon"
+        print "\tenergy,px,py,pz = electron"
         print "\tpt,phi = met"
         print "\n"
 
@@ -51,14 +51,14 @@ def cms_tools_help(verbose=0):
         print "met: Missing energy in the transverse plane. This is often used to identify if there was a neutrinos in the\n"
         print "\tevent, as they are not detected by CMS."
         print "\n"
-        print "\tmass,px,py,pz,csv = jet"
-        print "\tmass,px,py,pz,nsub,minmass = topjet"
-        print "\tmass,px,py,pz = muon"
-        print "\tmass,px,py,pz = electron"
+        print "\tenergy,px,py,pz,csv = jet"
+        print "\tenergy,px,py,pz,nsub,minmass = topjet"
+        print "\tenergy,px,py,pz = muon"
+        print "\tenergy,px,py,pz = electron"
         print "\tpt,phi = met"
         print "\n"
         print "jet:\n"
-        print "\tmass-mass of the particle/jet"
+        print "\tenergy-energy of the particle/jet"
         print "\tpx-momentum in the x direction"
         print "\tpy-momentum in the y direction"
         print "\tpz-momentum in the z direction"
@@ -66,7 +66,7 @@ def cms_tools_help(verbose=0):
         print "\t\tbetween b-quarks which live longer and fly further before decaying, and lighter quarks which decay very"
         print "\t\tquickly. The closer this value is to 1, the greater confidence we have that the jet came from a b-quark."
         print "topjet:\n"
-        print "\tmass-mass of the particle/jet"
+        print "\tenergy-energy of the particle/jet"
         print "\tpx-momentum in the x direction"
         print "\tpy-momentum in the y direction"
         print "\tpz-momentum in the z direction"
@@ -85,24 +85,24 @@ def pretty_print(collision):
 
     print "------- jets"
     for p in jets:
-        mass,px,py,pz,csv = p
-        print "mass:%8.5f px:%12.5f py:%12.5f pz:%12.5f csv:%12.5f" % (mass,px,py,pz,csv)
+        energy,px,py,pz,csv = p
+        print "energy:%8.5f px:%12.5f py:%12.5f pz:%12.5f csv:%12.5f" % (energy,px,py,pz,csv)
     print "------- top jets"
     for p in topjets:
-        mass,px,py,pz,nsub,minmass = p
-        print "mass:%8.5f px:%12.5f py:%12.5f pz:%12.5f nsub:%12.5f min mass:%12.5f" % (mass,px,py,pz,nsub,minmass)
+        energy,px,py,pz,nsub,minmass = p
+        print "energy:%8.5f px:%12.5f py:%12.5f pz:%12.5f nsub:%12.5f min mass:%12.5f" % (energy,px,py,pz,nsub,minmass)
     print "------- muons"
     for p in muons:
-        mass,px,py,pz = p
-        print "mass:%8.5f px:%12.5f py:%12.5f pz:%12.5f" % (mass,px,py,pz)
+        energy,px,py,pz,q = p
+        print "energy:%8.5f px:%12.5f py:%12.5f pz:%12.5f charge: %d" % (energy,px,py,pz,q)
     print "------- electrons"
     for p in electrons:
-        mass,px,py,pz = p
-        print "mass:%8.5f px:%12.5f py:%12.5f pz:%12.5f" % (mass,px,py,pz)
+        energy,px,py,pz,q = p
+        print "energy:%8.5f px:%12.5f py:%12.5f pz:%12.5f charge: %d" % (energy,px,py,pz,q)
     print "------- photons"
     for p in photons:
-        mass,px,py,pz = p
-        print "mass:%8.5f px:%12.5f py:%12.5f pz:%12.5f" % (mass,px,py,pz)
+        energy,px,py,pz = p
+        print "energy:%8.5f px:%12.5f py:%12.5f pz:%12.5f" % (energy,px,py,pz)
     print "------- met"
     for p in met:
         pt,phi = p
@@ -387,7 +387,7 @@ def draw_electron3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
 ################################################################################
 def draw_photon3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
 
-    lines = draw_line3D(origin=origin,pmom=pmom,color='gray',ls='--',lw=7)
+    lines = draw_line3D(origin=origin,pmom=pmom,color='yellow',ls='-',lw=7)
 
     return lines
 
@@ -407,13 +407,13 @@ def display_collision3D(collision,fig=None,ax=None):
     origin = np.zeros((len(muons),3))
     lines += draw_muon3D(origin=origin,pmom=pmom)
 
-    pmom = np.array(electrons).transpose()[1:4].transpose()
-    origin = np.zeros((len(electrons),3))
-    lines += draw_muon3D(origin=origin,pmom=pmom)
-
     pmom = np.array(photons).transpose()[1:4].transpose()
     origin = np.zeros((len(photons),3))
-    lines += draw_muon3D(origin=origin,pmom=pmom)
+    lines += draw_photon3D(origin=origin,pmom=pmom)
+
+    pmom = np.array(electrons).transpose()[1:4].transpose()
+    origin = np.zeros((len(electrons),3))
+    lines += draw_electron3D(origin=origin,pmom=pmom)
 
     if ax is None and fig is not None:
         ax = fig.add_subplot(1,1,1)
