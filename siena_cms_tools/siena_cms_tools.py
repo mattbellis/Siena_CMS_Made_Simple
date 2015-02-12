@@ -112,7 +112,7 @@ def pretty_print(collision):
 
 
 ################################################################################
-def get_collisions_from_file_name(infilename,verbose=False):
+def get_collisions(infilename,verbose=False):
 
     infile = None
     if zipfile.is_zipfile(infilename) is True:
@@ -129,7 +129,7 @@ def get_collisions_from_file_name(infilename,verbose=False):
 
 
 ################################################################################
-def get_collisions(infile,verbose=False):
+def get_collisions_from_file_object(infile,verbose=False):
 
     collisions = []
 

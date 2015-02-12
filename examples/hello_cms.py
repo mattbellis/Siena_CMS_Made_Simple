@@ -3,10 +3,7 @@ import matplotlib.pylab as plt
 
 import sys
 
-infile = open(sys.argv[1])
-
-#collisions = cms.get_collisions(infile)
-collisions = cms.get_collisions_from_file_name(sys.argv[1])
+collisions = cms.get_collisions(sys.argv[1])
 
 print len(collisions)
 
