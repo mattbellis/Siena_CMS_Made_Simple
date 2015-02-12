@@ -121,7 +121,7 @@ def get_collisions(infilename,verbose=False):
     else:
         infile = open(infilename)
 
-    collisions = get_collisions(infile,verbose)
+    collisions = get_collisions_from_file_object(infile,verbose)
 
     return collisions
 
