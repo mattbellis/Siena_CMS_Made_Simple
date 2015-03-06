@@ -3,7 +3,11 @@ import matplotlib.pylab as plt
 
 import sys
 
+import time
+
+start = time.time()
 collisions = cms.get_collisions(sys.argv[1])
+print "Time to read in %d collisions: %f seconds" % (len(collisions),time.time()-start)
 
 print len(collisions)
 
