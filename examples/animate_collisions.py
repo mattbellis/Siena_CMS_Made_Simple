@@ -19,9 +19,9 @@ print len(collisions)
 fig = plt.figure()
 #ax = fig.add_subplot(1,1,1)
 ax = fig.gca(projection='3d')
-for i in xrange(100):
+for i in xrange(1000):
     lines,fig,ax = cms.display_collision3D(collisions[i],fig=fig,ax=ax)
-    plt.pause(0.001)
+    plt.pause(0.0001)
 
 #plt.show(block=False)
 

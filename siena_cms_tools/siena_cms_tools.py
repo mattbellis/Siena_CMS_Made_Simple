@@ -126,6 +126,13 @@ def get_collisions(infilename,verbose=False):
     return collisions
 
 
+################################################################################
+def ptetaphi_to_xyz(pt,eta,phi):
+    px = pt*np.cos(phi)
+    py = pt*np.sin(phi)
+    pz = pt*np.sinh(eta)
+
+    return px,py,pz
 
 
 ################################################################################
@@ -309,7 +316,7 @@ def draw_jets(origins=[(0,0)],angles=[90],lengths=[0.5],opening_angles=[20],ntra
     
 ################################################################################
 ################################################################################
-def draw_line3D(origin=[(0,0,0)],pmom=[(1,1,1)],color='red',ls='-',lw=2.0):
+def draw_line3D(origin=[(0,0,0)],pmom=[(1,1,1)],color='red',ls='-',lw=2.0,alpha=1.0):
 
     lines = []
 
@@ -322,7 +329,7 @@ def draw_line3D(origin=[(0,0,0)],pmom=[(1,1,1)],color='red',ls='-',lw=2.0):
         y1 = p[0]
         z1 = p[1]
         #print x1,y1,z1
-        line = a3.Line3D((o[0],x1),(o[1],y1),(o[0],z1), lw=lw, ls=ls, alpha=0.9,color=color,markeredgecolor=color)
+        line = a3.Line3D((o[0],x1),(o[1],y1),(o[0],z1), lw=lw, ls=ls, alpha=alpha,color=color,markeredgecolor=color)
         lines.append(line)
 
     return lines
@@ -332,7 +339,7 @@ def draw_line3D(origin=[(0,0,0)],pmom=[(1,1,1)],color='red',ls='-',lw=2.0):
 ################################################################################
 def draw_beams():
 
-    lines = draw_line3D(origin=[(0,0,-0.1),(0,0,0.1)],pmom=[(0,0,-200.0),(0,0,200.0)],color='red',lw=1)
+    lines = draw_line3D(origin=[(0,0,-0.1),(0,0,0.1)],pmom=[(0,0,-200.0),(0,0,200.0)],color='red',lw=1,ls='--')
 
     return lines
 
@@ -389,10 +396,18 @@ def draw_electron3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
 ################################################################################
 def draw_photon3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
 
-    lines = draw_line3D(origin=origin,pmom=pmom,color='yellow',ls='-',lw=7)
+    lines = draw_line3D(origin=origin,pmom=pmom,color='yellow',ls='-',lw=5)
 
     return lines
 
+################################################################################
+def draw_MET3D(origin=[(0,0,0)],pmom=[(1,1,1)]):
+
+    lines = draw_line3D(origin=origin,pmom=pmom,color='red',ls='-',lw=9,alpha=0.5)
+
+    return lines
+
+################################################################################
 ################################################################################
 ################################################################################
 def display_collision3D(collision,fig=None,ax=None):
@@ -416,6 +431,10 @@ def display_collision3D(collision,fig=None,ax=None):
     pmom = np.array(electrons).transpose()[1:4].transpose()
     origin = np.zeros((len(electrons),3))
     lines += draw_electron3D(origin=origin,pmom=pmom)
+
+    pmom = [ptetaphi_to_xyz(met[0][0],0.0,met[0][1])]
+    origin = np.zeros((1,3))
+    lines += draw_MET3D(origin=origin,pmom=pmom)
 
     if ax is None and fig is not None:
         ax = fig.add_subplot(1,1,1)
