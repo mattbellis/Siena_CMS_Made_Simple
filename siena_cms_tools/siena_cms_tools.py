@@ -477,7 +477,7 @@ def write_to_file(collisions,filename='default_collisions_output',do_zip=True):
     i = 0
     for collision in collisions:
 
-        print collision
+        #print collision
         jets,topjets,muons,electrons,photons,met = collision
         
         if i%1000==0:
