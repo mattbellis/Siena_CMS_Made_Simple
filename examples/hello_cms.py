@@ -5,7 +5,7 @@ import sys
 
 import time
 
-#import seaborn as sn
+import seaborn as sn
 
 start = time.time()
 collisions = cms.get_collisions(sys.argv[1])
@@ -24,6 +24,8 @@ ax.set_ylabel(r'$p_y$ (GeV/c$^2$)',fontsize=16)
 ax.set_zlabel(r'$p_z$ (GeV/c$^2$)',fontsize=16)
 
 plt.tight_layout()
+
+plt.savefig('sample.png')
 
 plt.show()
 
